@@ -1,0 +1,97 @@
+{
+  "id": "ClawXRouter",
+  "name": "ClawXRouter",
+  "description": "Edge-cloud collaborative routing plugin that keeps sensitive data local and routes tasks to cost-effective models — protects user privacy by classifying requests into three safety levels and redacting PII before any cloud forwarding",
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "privacy": {
+        "type": "object",
+        "properties": {
+          "enabled": { "type": "boolean" },
+          "s2Policy": {
+            "type": "string",
+            "enum": ["proxy", "local"],
+            "description": "S2 handling policy: 'proxy' strips PII via local HTTP proxy before forwarding to cloud (default), 'local' routes S2 to local model entirely"
+          },
+          "proxyPort": {
+            "type": "number",
+            "description": "Port for the privacy proxy HTTP server (default: 8403)"
+          },
+          "checkpoints": {
+            "type": "object",
+            "properties": {
+              "onUserMessage": { "type": "array", "items": { "type": "string" } },
+              "onToolCallProposed": { "type": "array", "items": { "type": "string" } },
+              "onToolCallExecuted": { "type": "array", "items": { "type": "string" } }
+            }
+          },
+          "rules": {
+            "type": "object",
+            "properties": {
+              "keywords": {
+                "type": "object",
+                "properties": {
+                  "S2": { "type": "array", "items": { "type": "string" } },
+                  "S3": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "patterns": {
+                "type": "object",
+                "description": "Regex patterns for matching sensitive content",
+                "properties": {
+                  "S2": { "type": "array", "items": { "type": "string" } },
+                  "S3": { "type": "array", "items": { "type": "string" } }
+                }
+              },
+              "tools": {
+                "type": "object",
+                "properties": {
+                  "S2": {
+                    "type": "object",
+                    "properties": {
+                      "tools": { "type": "array", "items": { "type": "string" } },
+                      "paths": { "type": "array", "items": { "type": "string" } }
+                    }
+                  },
+                  "S3": {
+                    "type": "object",
+                    "properties": {
+                      "tools": { "type": "array", "items": { "type": "string" } },
+                      "paths": { "type": "array", "items": { "type": "string" } }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "localModel": {
+            "type": "object",
+            "properties": {
+              "enabled": { "type": "boolean" },
+              "provider": { "type": "string" },
+              "model": { "type": "string" },
+              "endpoint": { "type": "string" }
+            }
+          },
+          "guardAgent": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "workspace": { "type": "string" },
+              "model": { "type": "string" }
+            }
+          },
+          "session": {
+            "type": "object",
+            "properties": {
+              "isolateGuardHistory": { "type": "boolean" },
+              "baseDir": { "type": "string" }
+            }
+          }
+        }
+      }
+    }
+  }
+}
